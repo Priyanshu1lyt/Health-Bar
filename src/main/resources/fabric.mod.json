@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "vitalbars",
+  "version": "${version}",
+  "name": "VitalBars",
+  "description": "Floating color-changing health bars over players and mobs, with numbers, names and simple client commands.",
+  "authors": ["NotHeartYT"],
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["dev.vitalbars.VitalBarsClient"]
+  },
+  "depends": {
+    "fabricloader": ">=0.17.0",
+    "fabric-api": "*",
+    "minecraft": "1.21.11",
+    "java": ">=21"
+  }
+}
