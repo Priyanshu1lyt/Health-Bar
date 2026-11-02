@@ -22,7 +22,11 @@ public final class Commands {
         d.register(ClientCommandManager.literal("vitalbars")
                 .then(ClientCommandManager.literal("toggle").executes(c -> {
                     Config.enabled = !Config.enabled;
-                    return say(c.getSource(), "Bars " + onOff(Config.enabled));
+                    return say(c.getSource(), "Mod " + onOff(Config.enabled));
+                }))
+                .then(ClientCommandManager.literal("style").executes(c -> {
+                    Config.hearts = !Config.hearts;
+                    return say(c.getSource(), "Style: " + (Config.hearts ? "hearts" : "bar"));
                 }))
                 .then(ClientCommandManager.literal("damaged").executes(c -> {
                     Config.onlyDamaged = !Config.onlyDamaged;
