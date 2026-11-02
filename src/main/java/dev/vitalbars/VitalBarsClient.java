@@ -37,7 +37,7 @@ public class VitalBarsClient implements ClientModInitializer {
                 Config.enabled = !Config.enabled;
                 if (client.player != null) {
                     client.player.sendMessage(
-                            Text.literal("VitalBars: " + (Config.enabled ? "ON" : "OFF")), true);
+                            Text.literal("Health Bar: " + (Config.enabled ? "ON" : "OFF")), true);
                 }
             }
         });
