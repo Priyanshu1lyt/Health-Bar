@@ -13,12 +13,12 @@ Client-side Fabric mod for Minecraft 1.21.11 that shows floating Minecraft-style
 
 ## Commands (client-side)
 
-- `/vitalbars toggle` - turn on/off
-- `/vitalbars style` - switch hearts / bar
-- `/vitalbars range <4-64>` - max distance
-- `/vitalbars damaged` - only show damaged entities
-- `/vitalbars names` - toggle name labels
-- `/vitalbars players` - toggle showing players
+- `/healthbar toggle` - turn on/off
+- `/healthbar style` - switch hearts / bar
+- `/healthbar range <4-64>` - max distance
+- `/healthbar damaged` - only show damaged entities
+- `/healthbar names` - toggle name labels
+- `/healthbar players` - toggle showing players
 
 ## Build
 
