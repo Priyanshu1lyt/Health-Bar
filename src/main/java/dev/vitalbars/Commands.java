@@ -10,7 +10,7 @@ public final class Commands {
     private Commands() {}
 
     private static int say(FabricClientCommandSource src, String s) {
-        src.sendFeedback(Text.literal("[VitalBars] " + s));
+        src.sendFeedback(Text.literal("[Health Bar] " + s));
         return 1;
     }
 
@@ -19,7 +19,7 @@ public final class Commands {
     }
 
     public static void register(CommandDispatcher<FabricClientCommandSource> d) {
-        d.register(ClientCommandManager.literal("vitalbars")
+        d.register(ClientCommandManager.literal("healthbar")
                 .then(ClientCommandManager.literal("toggle").executes(c -> {
                     Config.enabled = !Config.enabled;
                     return say(c.getSource(), "Mod " + onOff(Config.enabled));
