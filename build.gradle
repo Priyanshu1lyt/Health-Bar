@@ -3,7 +3,7 @@ plugins {
 }
 version = '1.0.0'
 group = 'dev.vitalbars'
-base { archivesName = 'vitalbars' }
+base { archivesName = 'health-bar' }
 repositories { mavenCentral() }
 dependencies {
     minecraft 'com.mojang:minecraft:1.21.11'
