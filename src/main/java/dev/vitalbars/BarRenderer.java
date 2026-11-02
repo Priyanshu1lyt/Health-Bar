@@ -2,6 +2,7 @@ package dev.vitalbars;
 
 import java.awt.Color;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.RenderTickCounter;
@@ -10,9 +11,16 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.decoration.ArmorStandEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 
 public final class BarRenderer {
+    private static final Identifier CONTAINER = Identifier.ofVanilla("hud/heart/container");
+    private static final Identifier FULL = Identifier.ofVanilla("hud/heart/full");
+    private static final Identifier HALF = Identifier.ofVanilla("hud/heart/half");
+    private static final Identifier ABS_FULL = Identifier.ofVanilla("hud/heart/absorbing_full");
+    private static final Identifier ABS_HALF = Identifier.ofVanilla("hud/heart/absorbing_half");
+
     private BarRenderer() {}
 
     public static void render(DrawContext ctx, RenderTickCounter tickCounter) {
@@ -59,11 +67,53 @@ public final class BarRenderer {
             double ny = d.dotProduct(up) / depth / tanHalf;
             int x = (int) Math.round(w / 2.0 + nx * w / 2.0);
             int y = (int) Math.round(h / 2.0 - ny * h / 2.0);
-            if (x < -60 || x > w + 60 || y < -30 || y > h + 30) continue;
+            if (x < -120 || x > w + 120 || y < -60 || y > h + 30) continue;
 
             if (!p.canSee(le)) continue;
 
-            drawBar(ctx, mc, le, x, y, hp, max, abs, Math.sqrt(d.lengthSquared()));
+            double dist = Math.sqrt(d.lengthSquared());
+            int total = (int) Math.ceil(max / 2.0f);
+            if (Config.hearts && total <= 30) {
+                drawHearts(ctx, mc, le, x, y, hp, total, abs, dist);
+            } else {
+                drawBar(ctx, mc, le, x, y, hp, max, abs, dist);
+            }
+        }
+    }
+
+    private static void drawHearts(DrawContext ctx, MinecraftClient mc, LivingEntity le, int cx, int y,
+                                   float hp, int total, float abs, double dist) {
+        int s = (int) Math.max(5, Math.min(9, 10 - dist * 0.15));
+        int step = s - 1;
+        int cols = Math.min(10, total);
+        int rows = (total + 9) / 10;
+        int startX = cx - (cols * step + 1) / 2;
+        int halves = Math.max(0, Math.round(hp));
+
+        for (int i = 0; i < total; i++) {
+            int px = startX + (i % 10) * step;
+            int py = y - (i / 10) * step;
+            ctx.drawGuiTexture(RenderPipelines.GUI_TEXTURED, CONTAINER, px, py, s, s);
+            if (halves >= 2 * (i + 1)) {
+                ctx.drawGuiTexture(RenderPipelines.GUI_TEXTURED, FULL, px, py, s, s);
+            } else if (halves == 2 * i + 1) {
+                ctx.drawGuiTexture(RenderPipelines.GUI_TEXTURED, HALF, px, py, s, s);
+            }
+        }
+
+        int absHalves = Math.min(20, Math.round(abs));
+        int absHearts = (absHalves + 1) / 2;
+        for (int i = 0; i < absHearts; i++) {
+            int px = startX + (i % 10) * step;
+            int py = y - rows * step;
+            Identifier id = (absHalves >= 2 * (i + 1)) ? ABS_FULL : ABS_HALF;
+            ctx.drawGuiTexture(RenderPipelines.GUI_TEXTURED, id, px, py, s, s);
+        }
+
+        if (Config.showNames) {
+            int topRows = rows + (absHearts > 0 ? 1 : 0);
+            int ny = y - topRows * step - 9;
+            ctx.drawCenteredTextWithShadow(mc.textRenderer, le.getDisplayName(), cx, ny, 0xFFFFFFFF);
         }
     }
 
